@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        header a {
+            color: #f8f9fa;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .actions a {
+            margin-left: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .actions .logout {
+            background-color: #007bff;
+        }
+
+        .actions .logout:hover {
+            background-color: #0056b3;
+        }
+
+        .actions .delete-account {
+            background-color: #dc3545;
+        }
+
+        .actions .delete-account:hover {
+            background-color: #a71d2a;
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card h3 {
+            font-size: 1.2em;
+            margin: 0 0 10px;
+        }
+
+        .product-card p {
+            margin: 5px 0;
+            font-size: 1em;
+            color: #6c757d;
+        }
+
+        .rating {
+            font-weight: bold;
+            color: #ffc107;
+        }
+
+        .card-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .card-actions a {
+            flex-grow: 1;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .card-actions .edit {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .card-actions .edit:hover {
+            background-color: #0056b3;
+        }
+
+        .card-actions .delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .card-actions .delete:hover {
+            background-color: #a71d2a;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .orders-table th, .orders-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .orders-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .orders-table tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Seller Dashboard</div>
+        <nav>
+            <a href="/products/add">Add Product</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>My Products</h1>
+
+        <div class="product-list">
+            {% for product in store_catalog %}
+            <div class="product-card">
+                <a href="/products/{{ product.product_id }}" class="edit"><h3>{{ product.product_name }}</h3></a>
+                <p>Price: ${{ product.product_price }}</p>
+                {% if product.product_discount %}
+                <p>Discount: ${{ product.product_discount }}</p>
+                {% endif %}
+                <p>Average Rating: <span class="rating">{{ product.average_rating }}</span></p>
+                <p>Quantity: {{ product.product_quantity }}</p>
+                <div class="card-actions">
+                    <a href="/products/edit/{{ product.product_id }}" class="edit">Edit</a>
+                    <a href="/products/delete/{{ product.product_id }}" class="delete">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="section">
+            <h2>Orders</h2>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in seller_all_orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.order_date }}</td>
+                        <td>{{ order.order_status }}</td>
+                        <td><a href="/products/{{ order.product_id }}" class="edit">{{ order.product_name }}</a></td>
+                        <td>{{ order.product_quantity }}</td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Manage Your Account</h2>
+            <div class="actions">
+                <a href="/sellers/logout" class="logout">Logout</a>
+                <a href="##" class="delete-account" onclick="deleteAccount()">Delete Account</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function deleteAccount() {
+            if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+                window.location.href = "/sellers/delete-account";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: admin
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: Passw0rd12
+    ports:
+      - 15432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "81:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: rootl@mail.com
+      PGADMIN_DEFAULT_PASSWORD: Passw0rd12
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+
+volumes:
+  pgadmin_data:
+

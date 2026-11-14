@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .left {
+            margin-right: auto;
+        }
+
+        header a {
+            color: #f8f9fa;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 0 20px;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product {
+            margin-bottom: 30px;
+        }
+
+        .product h1 {
+            margin: 0;
+            font-size: 2em;
+            color: #343a40;
+        }
+
+        .product .price {
+            font-size: 1.5em;
+            color: #28a745;
+            margin: 10px 0;
+        }
+
+        .product .discount {
+            color: #dc3545;
+            text-decoration: line-through;
+        }
+
+        .reviews {
+            margin-top: 40px;
+        }
+
+        .reviews h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .review {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .review .author {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .review .date {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .review .grade {
+            margin-top: 5px;
+            font-weight: bold;
+            color: #ffc107;
+        }
+
+        .review p {
+            margin: 10px 0 0;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        form textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        form button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="left">Home</a>
+        <a href="/customers/cart">Cart</a>
+        <a href="/customers/account">Account</a>
+    </header>
+
+<div class="container">
+    <div class="product">
+        <h1>{{ product.name }}</h1>
+        <p>
+            <span class="price">
+                ${{ product.price - (product.discount or 0) }}
+            </span>
+            {% if product.discount %}
+            <span class="discount">${{ product.price }}</span>
+            {% endif %}
+        </p>
+        <p>{{ product.description }}</p>
+    </div>
+
+    <div class="reviews">
+        <h2>Customer Reviews</h2>
+        {% if reviews %}
+            {% for review in reviews %}
+            <div class="review">
+                <p class="author">{{ review.customer_name }}</p>
+                <p class="date">{{ review.review_date }}</p>
+                <p class="grade">Grade: {{ review.rating }}/5</p>
+                <p>{{ review.review_comment }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No reviews yet. Be the first to leave a review!</p>
+        {% endif %}
+    </div>
+
+    {% if not is_review %}
+    <form action="/products/add/review/{{ product.product_id }}" method="post">
+        <h2>Leave a Review</h2>
+        <textarea name="comment" placeholder="Write your review here..." required></textarea>
+        <select name="grade" required>
+            <option value="" disabled selected>Rate the product (1-5)</option>
+            <option value="1">1 - Poor</option>
+            <option value="2">2 - Fair</option>
+            <option value="3">3 - Good</option>
+            <option value="4">4 - Very Good</option>
+            <option value="5">5 - Excellent</option>
+        </select>
+        <button type="submit">Submit Review</button>
+    </form>
+    {% endif %}
+</div>
+
+</body>
+</html>

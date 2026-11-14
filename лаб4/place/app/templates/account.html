@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header a {
+            color: #f8f9fa;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 0 20px;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .greeting {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .greeting h1 {
+            font-size: 2em;
+            color: #007bff;
+        }
+
+        .greeting p {
+            font-size: 1.2em;
+            color: #6c757d;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 1.5em;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .orders {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .order {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .order h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        .order p {
+            margin: 5px 0;
+            font-size: 1em;
+            color: #6c757d;
+        }
+
+        .order .products {
+            margin-top: 10px;
+        }
+
+        .order .product {
+            margin-left: 15px;
+            font-size: 0.9em;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .button-group .delete-account {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .button-group .delete-account:hover {
+            background-color: #c82333;
+            box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
+            transform: scale(1.05);
+        }
+
+        .button-group .logout {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .button-group .logout:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">Home</a>
+        <a href="/customers/cart">Cart</a>
+    </header>
+
+    <div class="container">
+        <!-- Приветствие -->
+        <div class="greeting">
+            <h1>Welcome, {{ customer.name }}!</h1>
+            <p>Manage your account and view your orders below.</p>
+        </div>
+
+        <!-- Список заказов -->
+        <div class="section">
+            <h2>Your Orders</h2>
+            <div class="orders">
+                {% for order in orders %}
+                <div class="order">
+                    <h3>Order #{{ order.order_id }}</h3>
+                    <p>Date: {{ order.order_date }}</p>
+                    <p>Status: {{ order.order_status }}</p>
+                    <div class="products">
+                        <h4>Products:</h4>
+                        {% for product in order.products %}
+                        <div class="product">
+                            <a href="/products/{{ product.product_id }}">
+                                <p><strong>{{ product.product_name }}</strong></p>
+                            </a>
+                            <p>Quantity: {{ product.product_quantity }}</p>
+                            <p>Status: {{ product.product_status }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Управление аккаунтом -->
+        <div class="section">
+            <h2>Manage Your Account</h2>
+            <div class="button-group">
+                <button class="delete-account" onclick="deleteAccount()">Delete Account</button>
+                <button class="logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function deleteAccount() {
+            if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+                window.location.href = "/customers/delete";
+            }
+        }
+
+        function logout() {
+            window.location.href = "/customers/logout";
+        }
+    </script>
+</body>
+</html>

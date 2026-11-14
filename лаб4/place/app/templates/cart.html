@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .left {
+            margin-right: auto;
+        }
+
+        header a {
+            color: #f8f9fa;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 0 20px;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cart-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%; /* Элементы занимают всю ширину контейнера */
+        }
+
+        .cart-item h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .cart-item p {
+            font-size: 1em;
+            margin: 5px 0;
+        }
+
+        .cart-item .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .cart-item .left-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .cart-item button {
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart-item .add-more {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .cart-item .add-more:hover {
+            background-color: #218838;
+        }
+
+        .cart-item .remove-one {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .cart-item .remove-one:hover {
+            background-color: #c82333;
+        }
+
+        .cart-item .remove {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .cart-item .remove:hover {
+            background-color: #e0a800;
+        }
+
+        .make-order {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 30px auto 0;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .make-order:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="left">Home</a>
+        <a href="/customers/account">Account</a>
+    </header>
+
+    <div class="container">
+        <h1>Your Cart</h1>
+        <div class="cart-items">
+            {% for product in products %}
+            <div class="cart-item">
+                <h2>{{ product.name }}</h2>
+                <p>Price: ${{ product.price }}</p>
+                <p>Quantity: {{ product.quantity }}</p>
+                <div class="actions">
+                    <div class="left-actions">
+                        <button class="add-more" onclick="location.href='cart/add/{{ product.product_id }}'">Add more</button>
+                        <button class="remove-one" onclick="location.href='cart/remove/{{ product.product_id }}'">Remove</button>
+                    </div>
+                    <button class="remove" onclick="location.href='cart/delete/{{ product.product_id }}'">Delete</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% if products %}
+            <button class="make-order" onclick="redirectToOrder()">Make order</button>
+        {% endif %}
+    </div>
+</body>
+
+<script>
+    function redirectToOrder() {
+        const host = window.location.origin;
+        const orderUrl = `${host}/orders/create`;
+        window.location.href = orderUrl;
+    }
+</script>
+</html>
